@@ -12,17 +12,14 @@ class Search extends Component {
     endYear: ""
   };
 
-  loadArticles = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ articles: res.data, title: "", author: "", synopsis: "" })
-      )
-      .catch(err => console.log(err));
+  displayArticles = (res) => {  
+        this.setState({ articles: res.data.response.docs});
+        console.log(this.state.articles);
   };
 
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
+  deleteArticle = id => {
+    API.deleteArticle(id)
+      .then(res => this.loadArticles())
       .catch(err => console.log(err));
   };
 
@@ -33,24 +30,25 @@ class Search extends Component {
     });
   };
 
+//Accepts search options and formats search.
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-          title: this.state.title,
-          author: this.state.author,
-          synopsis: this.state.synopsis
+    if (this.state.topic) {
+      API.getArticles({
+         topic: this.state.topic,
+         startYear: this.state.startYear,
+         endYear: this.state.endYear
         })
-        .then(res => this.loadBooks())
+        .then(res => this.displayArticles(res))
         .catch(err => console.log(err));
     }
   };
 
-  // When this component mounts, grab the book with the _id of this.props.match.params.id
-  // e.g. localhost:3000/books/599dcb67f0f16317844583fc
+  // When this component mounts, grab the Article with the _id of this.props.match.params.id
+  // e.g. localhost:3000/Articles/599dcb67f0f16317844583fc
   componentDidMount() {
-    /*    API.getBook(this.props.match.params.id)
-          .then(res => this.setState({ book: res.data }))
+    /*    API.getArticle(this.props.match.params.id)
+          .then(res => this.setState({ Article: res.data }))
           .catch(err => console.log(err));*/
   }
 
@@ -70,14 +68,14 @@ class Search extends Component {
                 value={this.state.startYear}
                 onChange={this.handleInputChange}
                 name="startYear"
-                placeholder="Start Year (required)"/>
+                placeholder="Start Year (optional)"/>
               <Input
                 value={this.state.endYear}
                 onChange={this.handleInputChange}
                 name="endYear"
-                placeholder="Start Year (required)"/>
+                placeholder="End Year (optional)"/>
               <FormBtn
-                disabled={!(this.state.topic)}
+                disabled={!(this.state.topic && this.state.startYear && this.state.endYear)}
                 onClick={this.handleFormSubmit}>
                 Search
               </FormBtn>
