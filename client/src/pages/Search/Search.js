@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import Jumbotron from "../../components/Jumbotron";
 import API from "../../utils/API";
 import { Input, TextArea, FormBtn } from "../../components/Form";
+import { List, ListItem } from "../../components/List";
+import DeleteBtn from "../../components/DeleteBtn";
+import SaveBtn from "../../components/SaveBtn";
 
 class Search extends Component {
   state = {
@@ -15,6 +18,12 @@ class Search extends Component {
   displayArticles = (res) => {  
         this.setState({ articles: res.data.response.docs});
         console.log(this.state.articles);
+  };
+
+  saveArticle = id => {
+    API.saveArticle(id)
+      .then(res => this.displayArticles())
+      .catch(err => console.log(err));
   };
 
   deleteArticle = id => {
@@ -80,6 +89,26 @@ class Search extends Component {
                 Search
               </FormBtn>
             </form>
+            <div>
+            <List>
+            {this.state.articles.map(article => (
+              <ListItem>
+                <h4>{article.headline.main}</h4>
+                <p>{article.abstract}<SaveBtn onClick={() => this.saveArticle(article)} /></p>   
+              </ListItem>
+            ))}
+            </List>
+            </div>
+            <div>
+            <List>
+            {this.state.articles.map(article => (
+              <ListItem>
+                <h4>{article.headline.main}</h4>
+                <p>{article.abstract}<DeleteBtn onClick={() => this.saveArticle(article)} /></p>   
+              </ListItem>
+            ))}
+            </List>
+            </div>
             </div>
     );
   }

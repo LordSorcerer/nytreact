@@ -1,6 +1,11 @@
 import axios from "axios";
 
-var articleData = 6;
+var articleData = {title: "Amazing Fish!",
+  synopsis: "Fish are amazing, you know?",
+  date: Date.now(),
+  url: "www.fishnaukus.com",
+};
+
 export default {
   // Gets all Articles based on options provided
   getArticles: function(options) {
@@ -23,21 +28,3 @@ export default {
     return axios.post("/api/articles", articleData);
   }
 };
-
-
-
-/*
-var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-url += '?' + $.param({
-  'q': "dogs",
-  'begin_date': "20001010",
-  'end_date': "20051010"
-});
-$.ajax({
-  url: url,
-  method: 'GET',
-}).done(function(result) {
-  console.log(result);
-}).fail(function(err) {
-  throw err;
-});*/
